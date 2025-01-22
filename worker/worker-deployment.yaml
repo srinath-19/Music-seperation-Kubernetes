@@ -1,0 +1,28 @@
+apiVersion: apps/v1 #  for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+kind: Deployment
+metadata:
+  name: worker-server
+spec:
+  selector:
+    matchLabels:
+      app: worker-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: worker-server
+    spec:
+      containers:
+      - name: worker-server
+        image: srinath1912/worker-server:latest       
+        env:
+        - name: REDISTOGO_URL
+          value: redis.default
+        - name: MINIOTOGO_HOST
+          value: "minio.default:9000"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 5Gi
+        ports:
+        - containerPort: 5000
